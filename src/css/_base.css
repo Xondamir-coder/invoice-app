@@ -1,0 +1,42 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html {
+	/* 10px = 1rem */
+	/* because 62.5% of 16px is 10px */
+	font-size: 62.5%;
+}
+body {
+	font-size: 1.6rem;
+	font-family: var(--font-base);
+	background-color: var(--color-very-light-gray);
+	transition: background-color 300ms;
+}
+body.dark {
+	background-color: var(--color-very-dark-blue-alt);
+}
+@media only screen and (max-width: 1440px) {
+	html {
+		/* -1.2px */
+		/* 1rem = 8.8px */
+		font-size: 55%;
+	}
+}
+@media only screen and (max-width: 768px) {
+	html {
+		/* -0.8px */
+		/* 1rem = 8px */
+		font-size: 50%;
+	}
+}
+@media only screen and (max-width: 375px) {
+	html {
+		/* -0.8px */
+		/* 1rem = 7.2px */
+		font-size: 45%;
+	}
+}

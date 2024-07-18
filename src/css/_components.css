@@ -1,0 +1,83 @@
+/* Button Primary */
+.button-primary-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1.6rem;
+	padding: 0.6rem 8px;
+}
+.button-primary-svg {
+	background-color: #fff;
+	border-radius: 50%;
+	width: 3.2rem;
+	height: 3.2rem;
+	display: grid;
+	place-items: center;
+}
+.button-primary,
+.button-primary-icon {
+	background-color: var(--color-primary);
+	color: #fff;
+}
+.button-primary:hover,
+.button-primary-icon:hover {
+	background-color: var(--color-secondary);
+}
+
+/* Button secondary */
+.button-secondary {
+	color: var(--color-blue-gray);
+	background-color: var(--color-very-light-gray);
+}
+.button-secondary:hover {
+	background-color: var(--color-lavender-blue);
+}
+body.dark .button-secondary {
+	background-color: var(--color-dark-slate-blue);
+	color: var(--color-lavender-blue);
+}
+body.dark .button-secondary:hover {
+	background-color: #fff;
+}
+
+.button-tertiary {
+	color: var(--color-cool-gray);
+	background-color: #373b53;
+}
+.button-tertiary:hover {
+	background-color: var(--color-very-dark-blue);
+}
+body.dark .button-tertiary {
+	color: var(--color-lavender-blue);
+}
+body.dark .button-tertiary:hover {
+	background-color: var(--color-tertiary);
+}
+
+.button-red {
+	color: #fff;
+	background-color: var(--color-red-orange);
+}
+.button-red:hover {
+	background-color: var(--color-pink);
+}
+
+.button-lavender {
+	color: var(--color-blue-gray);
+	background-color: #f9fafe;
+}
+.button-lavender:hover {
+	background-color: var(--color-lavender-blue);
+}
+
+button {
+	cursor: pointer;
+	font-family: inherit;
+	border: none;
+	border-radius: 3rem;
+	padding: 1.6rem 8px;
+	font-size: 1.5rem;
+	letter-spacing: -0.25px;
+	font-weight: bold;
+	transition: background-color 300ms;
+}

@@ -1,0 +1,21 @@
+:root {
+	--color-primary: #7c5dfa;
+	--color-secondary: #9277ff;
+	--color-tertiary: #1e2139;
+	--color-dark-slate-blue: #252945;
+	--color-lavender-blue: #dfe3fa;
+	--color-cool-gray: #888eb0;
+	--color-blue-gray: #7e88c3;
+	--color-very-dark-blue: #0c0e16;
+	--color-red-orange: #ec5757;
+	--color-pink: #ff9797;
+	--color-very-light-gray: #f8f8fb;
+	--color-very-dark-blue-alt: #141625;
+
+	--font-base: 'League Spartan', sans-serif;
+
+	--breakpoint-large-desktop: 1920px;
+	--breakpoint-desktop: 1440px;
+	--breakpoint-tablet: 768px;
+	--breakpoint-mobile: 375px;
+}

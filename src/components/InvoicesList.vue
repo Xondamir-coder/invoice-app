@@ -49,7 +49,7 @@ const invoiceStore = useInvoiceStore();
 }
 body.dark .empty {
 	&__title {
-		color: #fff;
+		color: #ffffff;
 	}
 	&__text {
 		color: var(--color-lavender-blue);

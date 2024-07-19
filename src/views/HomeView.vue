@@ -11,8 +11,8 @@
 			<div class="invoices__filter">
 				<Dropdown
 					:options="filterOptions"
-					label="Filter by status"
 					multiple
+					label="Filter by status"
 					v-model="selectedFilterOptions" />
 				<button class="invoices__filter-button button-primary-icon">
 					<span class="button-primary-svg">
@@ -22,7 +22,7 @@
 				</button>
 			</div>
 		</div>
-		<InvoicesList />
+		<InvoicesList :filters="selectedFilterOptions" />
 	</main>
 </template>
 
@@ -30,16 +30,12 @@
 import Dropdown from '@/components/Dropdown.vue';
 import InvoicesList from '@/components/InvoicesList.vue';
 import { useInvoiceStore } from '@/stores/invoice';
-import { ref, watchEffect } from 'vue';
+import { ref } from 'vue';
 
 const selectedFilterOptions = ref([]);
 const filterOptions = ['Draft', 'Pending', 'Paid'];
 const invoiceStore = useInvoiceStore();
 document.title = 'All Invoices';
-
-watchEffect(() => {
-	invoiceStore.filterByStatus(selectedFilterOptions.value);
-});
 </script>
 
 <style lang="scss" scoped>

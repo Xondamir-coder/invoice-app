@@ -1,20 +1,17 @@
 <template>
-	<ul class="list" v-if="invoiceStore.invoices.length">
-		<li v-for="invoice in invoiceStore.invoices" :key="invoice.id">
+	<ul class="list" v-if="invoices.length">
+		<li v-for="invoice in invoices" :key="invoice.id">
 			<RouterLink class="item" :to="{ name: 'invoice', params: { id: invoice.id } }">
 				<div class="item__left">
 					<h1 class="item__id"><span class="item__hashtag">#</span>{{ invoice.id }}</h1>
 					<p class="item__date">
-						<span class="item__due">Due</span> {{ invoice.createdAt }}
+						<span class="item__due">Due</span> {{ formatDate(invoice.paymentDue) }}
 					</p>
 					<p class="item__name">{{ invoice.clientName }}</p>
 				</div>
 				<div class="item__right">
 					<h1 class="item__total">£ {{ invoice.total }}</h1>
-					<span class="item__status" :class="`item__status--${invoice.status}`">
-						<div class="item__circle"></div>
-						{{ invoice.status }}
-					</span>
+					<InvoiceStatus :status="invoice.status" />
 					<img
 						class="item__right-arrow"
 						src="@/assets/icon-arrow-right.svg"
@@ -37,7 +34,22 @@
 
 <script setup>
 import { useInvoiceStore } from '@/stores/invoice';
+import InvoiceStatus from '@/components/InvoiceStatus.vue';
+import { formatDate } from '@/js/helpers';
+import { computed } from 'vue';
 const invoiceStore = useInvoiceStore();
+
+const props = defineProps({
+	filters: Array
+});
+
+const invoices = computed(() => {
+	const changedOptions = props.filters.map(e => e.toLowerCase());
+	if (!changedOptions.length) {
+		return invoiceStore.invoices;
+	}
+	return invoiceStore.invoices.filter(invoice => changedOptions.includes(invoice.status));
+});
 </script>
 
 <style lang="scss" scoped>
@@ -99,19 +111,6 @@ body.dark .empty {
 	flex-direction: column;
 	gap: 16px;
 	overflow-y: auto;
-	&::-webkit-scrollbar {
-		width: 1rem;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background-color: var(--color-primary);
-		border: none;
-		border-radius: 10px;
-	}
-	&::-webkit-scrollbar-track {
-		background: var(--color-lavender-blue);
-		border-radius: 10px;
-	}
 }
 .item {
 	text-decoration: none;
@@ -134,44 +133,8 @@ body.dark .empty {
 	&:hover {
 		border-color: var(--color-primary);
 	}
-	&__status {
-		padding: 1.7rem 1.8rem;
-		border-radius: 1rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		text-transform: capitalize;
-		transition: background-color 300ms, color 300ms;
-		.item__circle {
-			transition: background-color 300ms;
-		}
-		&--paid {
-			background-color: rgba(#33d69f, 0.1);
-			color: #33d69f;
-			.item__circle {
-				background-color: #33d69f;
-			}
-		}
-		&--pending {
-			background-color: rgba(#ff8f00, 0.1);
-			color: #ff8f00;
-			.item__circle {
-				background-color: #ff8f00;
-			}
-		}
-		&--draft {
-			background-color: rgba(#373b53, 0.1);
-			color: #373b53;
-			.item__circle {
-				background-color: #373b53;
-			}
-		}
-	}
-	&__circle {
-		height: 8px;
-		width: 8px;
-		border-radius: 50%;
+	&:hover &__right-arrow {
+		transform: translateX(8px);
 	}
 	&__cta {
 		display: flex;
@@ -190,6 +153,7 @@ body.dark .empty {
 			justify-content: center;
 		}
 		&-arrow {
+			transition: transform 300ms;
 			@media only screen and (max-width: 500px) {
 				display: none;
 			}
@@ -248,15 +212,6 @@ body.dark .item {
 	&__date,
 	&__due {
 		color: var(--color-lavender-blue);
-	}
-	&__status {
-		&--draft {
-			background-color: #292c44;
-			color: var(--color-lavender-blue);
-			.item__circle {
-				background-color: var(--color-lavender-blue);
-			}
-		}
 	}
 }
 </style>

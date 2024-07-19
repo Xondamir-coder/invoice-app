@@ -34,6 +34,7 @@ import ThemeIcon from '@/components/ThemeIcon.vue';
 		flex-direction: row;
 		border-top-right-radius: initial;
 		border-bottom-right-radius: initial;
+		max-height: 80px;
 	}
 	&__bottom {
 		display: flex;

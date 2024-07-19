@@ -51,7 +51,6 @@ const props = defineProps({
 const selectOption = option => {
 	if (!props.multiple) {
 		model.value = option;
-		console.log(model.value);
 		return;
 	}
 	if (model.value.includes(option)) {

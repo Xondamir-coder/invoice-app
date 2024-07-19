@@ -12,7 +12,7 @@ import Sidebar from './components/Sidebar.vue';
 <style lang="scss" scoped>
 .container {
 	display: flex;
-	height: 100vh;
+	min-height: 100vh;
 
 	// RouterView to grow full width
 	& > *:not(.sidebar) {
@@ -21,7 +21,6 @@ import Sidebar from './components/Sidebar.vue';
 
 	@media only screen and (max-width: 768px) {
 		flex-direction: column;
-		height: auto;
 	}
 }
 </style>

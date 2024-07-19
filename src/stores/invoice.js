@@ -2,17 +2,22 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import data from '@/data.json';
 
-export const useInvoiceStore = defineStore('invoice', () => {
-	const invoices = ref(data);
+const getInvoices = () => ref(JSON.parse(localStorage.getItem('invoices')) || data);
+const setInvoices = invoices => localStorage.setItem('invoices', JSON.stringify(invoices));
 
-	const filterByStatus = options => {
-		const changedOptions = options.map(e => e.toLowerCase());
-		if (!options.length) {
-			invoices.value = data;
-			return;
-		}
-		invoices.value = data.filter(invoice => changedOptions.includes(invoice.status));
+export const useInvoiceStore = defineStore('invoice', () => {
+	const invoices = getInvoices();
+
+	const markAsPaid = invoice => {
+		if (invoice.status === 'paid') return;
+		invoice.status = 'paid';
+		setInvoices(invoices.value);
 	};
 
-	return { invoices, filterByStatus };
+	const deleteInvoice = invoice => {
+		invoices.value = invoices.value.filter(i => i.id !== invoice.id);
+		setInvoices(invoices.value);
+	};
+
+	return { invoices, markAsPaid, deleteInvoice };
 });

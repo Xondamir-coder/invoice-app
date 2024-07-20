@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<div class="overlay" @click="closeModal"></div>
+		<Overlay @close="closeModal" />
 		<div class="modal">
 			<h1 class="modal__title">Confirm Deletion</h1>
 			<p class="modal__text">
@@ -17,6 +17,7 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
+import Overlay from '@/components/Overlay.vue';
 
 const route = useRoute();
 const emits = defineEmits(['close', 'delete']);
@@ -37,16 +38,6 @@ const deleteInvoice = () => emits('delete');
 	}
 }
 
-.overlay {
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.703);
-	position: fixed;
-	inset: 0;
-	transition: opacity 300ms, visibility 300ms;
-	cursor: pointer;
-}
-
 .modal {
 	transition-duration: 300ms;
 	transition-property: opacity, visibility, translate, background-color;
@@ -61,6 +52,7 @@ const deleteInvoice = () => emits('delete');
 	background-color: white;
 	border-radius: 1rem;
 	max-width: 48rem;
+	z-index: 2;
 
 	&__title {
 		color: var(--color-very-dark-blue);

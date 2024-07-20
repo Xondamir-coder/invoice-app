@@ -14,7 +14,7 @@
 					multiple
 					label="Filter by status"
 					v-model="selectedFilterOptions" />
-				<button class="invoices__filter-button button-primary-icon">
+				<button @click="toggleForm" class="invoices__filter-button button-primary-icon">
 					<span class="button-primary-svg">
 						<img src="@/assets/icon-plus.svg" alt="plus" />
 					</span>
@@ -24,18 +24,25 @@
 		</div>
 		<InvoicesList :filters="selectedFilterOptions" />
 	</main>
+	<Teleport to="body">
+		<Form :class="{ hidden: !isAdding }" type="add" @close="toggleForm" />
+	</Teleport>
 </template>
 
 <script setup>
 import Dropdown from '@/components/Dropdown.vue';
+import Form from '@/components/Form.vue';
 import InvoicesList from '@/components/InvoicesList.vue';
 import { useInvoiceStore } from '@/stores/invoice';
 import { ref } from 'vue';
 
+const isAdding = ref(false);
 const selectedFilterOptions = ref([]);
 const filterOptions = ['Draft', 'Pending', 'Paid'];
 const invoiceStore = useInvoiceStore();
 document.title = 'All Invoices';
+
+const toggleForm = () => (isAdding.value = !isAdding.value);
 </script>
 
 <style lang="scss" scoped>
@@ -59,15 +66,16 @@ document.title = 'All Invoices';
 	}
 	&__filter {
 		display: flex;
+		align-items: center;
 		gap: 2rem;
 		&-button {
-			padding-left: 1.5rem;
-			padding-right: 1.5rem;
+			padding: 1.1rem 1.5rem;
 		}
 	}
 	&__header {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 	}
 	&__title {
 		display: flex;

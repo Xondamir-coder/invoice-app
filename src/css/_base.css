@@ -17,7 +17,7 @@ body {
 	transition: background-color 300ms;
 }
 body::-webkit-scrollbar {
-	width: 1rem;
+	width: 12px;
 }
 
 body::-webkit-scrollbar-thumb {

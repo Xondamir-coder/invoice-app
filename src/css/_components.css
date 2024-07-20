@@ -71,6 +71,11 @@ body.dark .button-tertiary:hover {
 	background-color: var(--color-lavender-blue);
 }
 
+body.dark .button-lavender {
+	background-color: var(--color-dark-slate-blue);
+	color: var(--color-lavender-blue);
+}
+
 button {
 	cursor: pointer;
 	font-family: inherit;

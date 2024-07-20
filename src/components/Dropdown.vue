@@ -1,37 +1,42 @@
 <template>
-	<label
-		for="checkbox"
-		class="dropdown"
-		:style="{
-			'border-color': isChecked ? 'var(--color-secondary)' : ''
-		}"
-		:class="{ 'dropdown-multiple': multiple }">
-		<span class="dropdown-value">{{ multiple ? '' : model }}</span>
-		<div class="dropdown-label--big">{{ label }}</div>
-		<div class="dropdown-label--small">{{ label.slice(0, 6) }}</div>
-		<input
-			v-model="isChecked"
-			type="checkbox"
-			name="checkbox"
-			id="checkbox"
-			class="dropdown-checkbox" />
-		<div class="dropdown-options">
-			<label
-				:for="multiple ? option : 'checkbox'"
-				class="dropdown-option"
-				v-for="option in options"
-				@click="!multiple ? selectOption(option) : null"
-				:key="option">
-				<input
-					class="dropdown-option-checkbox"
-					v-if="multiple"
-					type="checkbox"
-					@change="selectOption(option)"
-					:id="option" />
-				<span>{{ option }}</span>
-			</label>
-		</div>
-	</label>
+	<div class="dropdown-container">
+		<p v-if="!multiple" class="dropdown-label dropdown-label--big">{{ label }}</p>
+		<p v-if="!multiple" class="dropdown-label dropdown-label--small">
+			{{ label.split(' ')[0] }}
+		</p>
+		<label
+			:for="randomLabel"
+			class="dropdown"
+			:style="{
+				'border-color': isChecked ? 'var(--color-secondary)' : ''
+			}"
+			:class="{ 'dropdown-multiple': multiple }">
+			<span class="dropdown-value">{{ multiple ? label : model }}</span>
+
+			<input
+				v-model="isChecked"
+				type="checkbox"
+				name="checkbox"
+				:id="randomLabel"
+				class="dropdown-checkbox" />
+			<div class="dropdown-options">
+				<label
+					:for="multiple ? option : randomLabel"
+					class="dropdown-option"
+					v-for="option in options"
+					@click="!multiple ? selectOption(option) : null"
+					:key="option">
+					<input
+						class="dropdown-option-checkbox"
+						v-if="multiple"
+						type="checkbox"
+						@change="selectOption(option)"
+						:id="option" />
+					<span>{{ option }}</span>
+				</label>
+			</div>
+		</label>
+	</div>
 </template>
 
 <script setup>
@@ -47,6 +52,8 @@ const props = defineProps({
 		default: false
 	}
 });
+
+const randomLabel = Math.random() * 100;
 
 const selectOption = option => {
 	if (!props.multiple) {
@@ -68,7 +75,6 @@ const selectOption = option => {
 	letter-spacing: -0.25px;
 }
 .dropdown {
-	width: 24rem;
 	position: relative;
 	padding: 2rem 2.4rem;
 	border: 1px solid var(--color-lavender-blue);
@@ -80,6 +86,16 @@ const selectOption = option => {
 	align-items: center;
 	justify-content: space-between;
 	color: var(--color-very-dark-blue);
+	&-container {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		// justify-content: ;
+		.dropdown {
+			flex: 1;
+		}
+	}
 
 	&:hover {
 		border-color: var(--color-secondary);
@@ -95,11 +111,12 @@ const selectOption = option => {
 		}
 	}
 	&-options {
+		z-index: 10;
 		background: #fff;
 		display: flex;
 		flex-direction: column;
 		position: absolute;
-		box-shadow: 0px 10px 20px 0px #48549f27;
+		box-shadow: 0px 10px 20px 0px #48549f60;
 		border-radius: 1rem;
 		top: calc(100% + 20px);
 		left: 0;
@@ -164,20 +181,11 @@ const selectOption = option => {
 		}
 	}
 	&-label {
-		position: absolute;
-		top: -20px;
-		left: 0;
-		transform: translateY(-50%);
-
 		color: var(--color-blue-gray);
 		font-size: 1.5rem;
 		font-weight: 500;
 		letter-spacing: -0.1px;
-		position: absolute;
-		top: -2rem;
-		left: 0;
-		transform: translateY(-50%);
-		transition: top 200ms, left 200ms, color 300ms;
+		transition: color 300ms;
 
 		&--small {
 			@media only screen and (min-width: 768px) {

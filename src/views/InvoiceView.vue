@@ -7,10 +7,10 @@
 		<section class="invoice__head">
 			<div class="invoice__head-left">
 				<span class="invoice__status">Status</span>
-				<InvoiceStatus :status="invoice?.status" />
+				<InvoiceStatus :status="invoiceStore.invoice?.status" />
 			</div>
 			<div class="invoice__head-right invoice__head-right--big">
-				<button class="button-secondary">Edit</button>
+				<button class="button-secondary" @click="toggleEditForm">Edit</button>
 				<button class="button-red" @click="toggleDeleteModal">Delete</button>
 				<button class="button-primary" @click="markAsPaid">Mark as Paid</button>
 			</div>
@@ -19,39 +19,55 @@
 			<div class="invoice__content-head">
 				<div class="invoice__content-desc">
 					<p class="invoice__content-id">
-						<span class="invoice__hashtag">#</span>{{ invoice?.id }}
+						<span class="invoice__hashtag">#</span>{{ invoiceStore.invoice?.id }}
 					</p>
-					<p class="invoice__label">{{ invoice?.description }}</p>
+					<p class="invoice__label">{{ invoiceStore.invoice?.description }}</p>
 				</div>
 				<ul class="invoice__content-address">
-					<li class="invoice__label">{{ invoice?.senderAddress.street }}</li>
-					<li class="invoice__label">{{ invoice?.senderAddress.city }}</li>
-					<li class="invoice__label">{{ invoice?.senderAddress.postCode }}</li>
-					<li class="invoice__label">{{ invoice?.senderAddress.country }}</li>
+					<li class="invoice__label">{{ invoiceStore.invoice?.senderAddress.street }}</li>
+					<li class="invoice__label">{{ invoiceStore.invoice?.senderAddress.city }}</li>
+					<li class="invoice__label">
+						{{ invoiceStore.invoice?.senderAddress.postCode }}
+					</li>
+					<li class="invoice__label">
+						{{ invoiceStore.invoice?.senderAddress.country }}
+					</li>
 				</ul>
 			</div>
 			<div class="invoice__content-items">
 				<div class="invoice__content-item">
 					<p class="invoice__label">Invoice Date</p>
-					<h1 class="invoice__heading">{{ formatDate(invoice?.createdAt) }}</h1>
+					<h1 class="invoice__heading">
+						{{ formatDate(invoiceStore.invoice?.createdAt) }}
+					</h1>
 				</div>
 				<div class="invoice__content-item">
 					<p class="invoice__label">Payment Due</p>
-					<h1 class="invoice__heading">{{ formatDate(invoice?.paymentDue) }}</h1>
+					<h1 class="invoice__heading">
+						{{ formatDate(invoiceStore.invoice?.paymentDue) }}
+					</h1>
 				</div>
 				<div class="invoice__content-item">
 					<p class="invoice__label">Bill To</p>
-					<h1 class="invoice__heading">{{ invoice?.clientName }}</h1>
+					<h1 class="invoice__heading">{{ invoiceStore.invoice?.clientName }}</h1>
 					<ul class="invoice__content-client">
-						<li class="invoice__label">{{ invoice?.clientAddress.street }}</li>
-						<li class="invoice__label">{{ invoice?.clientAddress.city }}</li>
-						<li class="invoice__label">{{ invoice?.clientAddress.postCode }}</li>
-						<li class="invoice__label">{{ invoice?.clientAddress.country }}</li>
+						<li class="invoice__label">
+							{{ invoiceStore.invoice?.clientAddress.street }}
+						</li>
+						<li class="invoice__label">
+							{{ invoiceStore.invoice?.clientAddress.city }}
+						</li>
+						<li class="invoice__label">
+							{{ invoiceStore.invoice?.clientAddress.postCode }}
+						</li>
+						<li class="invoice__label">
+							{{ invoiceStore.invoice?.clientAddress.country }}
+						</li>
 					</ul>
 				</div>
 				<div class="invoice__content-item">
 					<p class="invoice__label">Sent to</p>
-					<h1 class="invoice__heading">{{ invoice?.clientEmail }}</h1>
+					<h1 class="invoice__heading">{{ invoiceStore.invoice?.clientEmail }}</h1>
 				</div>
 			</div>
 			<div class="invoice__content-transactions">
@@ -62,7 +78,9 @@
 						<span class="invoice__label">Price</span>
 						<span class="invoice__label">Total</span>
 					</div>
-					<div class="invoice__content-transaction" v-for="item in invoice?.items">
+					<div
+						class="invoice__content-transaction"
+						v-for="item in invoiceStore.invoice?.items">
 						<h1 class="invoice__heading">{{ item.name }}</h1>
 						<p class="invoice__content-transaction_p">{{ item.quantity }}</p>
 						<p class="invoice__content-transaction_p">&pound; {{ item.price }}</p>
@@ -71,23 +89,27 @@
 				</div>
 				<div class="invoice__content-transactions_bottom">
 					<p>Amount Due</p>
-					<span>&pound; {{ invoice?.total }}</span>
+					<span>&pound; {{ invoiceStore.invoice?.total }}</span>
 				</div>
 			</div>
 		</section>
 		<div class="invoice__head-right invoice__head-right--small">
-			<button class="button-secondary">Edit</button>
+			<button class="button-secondary" @click="toggleEditForm">Edit</button>
 			<button class="button-red" @click="toggleDeleteModal">Delete</button>
 			<button class="button-primary" @click="markAsPaid">Mark as Paid</button>
 		</div>
-
-		<Teleport to="body">
-			<DeleteModal
-				:class="{ hidden: !isDeleting }"
-				@close="toggleDeleteModal"
-				@delete="deleteInvoice" />
-		</Teleport>
 	</main>
+
+	<Teleport to="body">
+		<DeleteModal
+			:class="{ hidden: !isDeleting }"
+			@close="toggleDeleteModal"
+			@delete="deleteInvoice" />
+	</Teleport>
+
+	<Teleport to="body">
+		<Form :class="{ hidden: !isEditing }" type="edit" @close="toggleEditForm" />
+	</Teleport>
 </template>
 
 <script setup>
@@ -95,24 +117,23 @@ import InvoiceStatus from '@/components/InvoiceStatus.vue';
 import DeleteModal from '@/components/DeleteModal.vue';
 import { formatDate } from '@/js/helpers';
 import { useInvoiceStore } from '@/stores/invoice';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Form from '@/components/Form.vue';
 
 const route = useRoute();
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
 
 const isDeleting = ref(false);
-
-const invoice = computed(() =>
-	invoiceStore.invoices.find(invoice => invoice?.id === route.params.id)
-);
+const isEditing = ref(false);
 
 const routeBack = () => router.go(-1);
-const markAsPaid = () => invoiceStore.markAsPaid(invoice?.value);
+const markAsPaid = () => invoiceStore.markAsPaid();
 const toggleDeleteModal = () => (isDeleting.value = !isDeleting.value);
+const toggleEditForm = () => (isEditing.value = !isEditing.value);
 const deleteInvoice = () => {
-	invoiceStore.deleteInvoice(invoice?.value);
+	invoiceStore.deleteInvoice();
 	toggleDeleteModal();
 	routeBack();
 };

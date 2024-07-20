@@ -29,6 +29,7 @@ import ThemeIcon from '@/components/ThemeIcon.vue';
 	flex-direction: column;
 	justify-content: space-between;
 	transition: background-color 300ms;
+	z-index: 3;
 	@media only screen and (max-width: 768px) {
 		max-width: initial;
 		flex-direction: row;
@@ -80,7 +81,7 @@ import ThemeIcon from '@/components/ThemeIcon.vue';
 			width: 12rem;
 		}
 		&-icon {
-			z-index: 2;
+			z-index: 1;
 			height: 4rem;
 			width: 4rem;
 		}

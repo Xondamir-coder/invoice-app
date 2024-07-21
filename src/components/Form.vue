@@ -522,7 +522,9 @@ body.dark .container {
 }
 body.dark .form {
 	&__buttons {
-		background-color: var(--color-tertiary);
+		@media only screen and (max-width: 500px) {
+			background-color: var(--color-tertiary);
+		}
 	}
 }
 </style>

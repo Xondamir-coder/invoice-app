@@ -1,6 +1,7 @@
 <template>
 	<div class="input-container">
 		<input
+			@input="emitInput"
 			required
 			:type="type"
 			id="input"
@@ -9,7 +10,7 @@
 			v-model="model" />
 		<div class="label-container" :class="{ positioned: !label }">
 			<label v-if="label" for="input" class="input-label">{{ label }}</label>
-			<label for="input" class="input-error">can't be empty</label>
+			<label v-if="!noError" for="input" class="input-error">can't be empty</label>
 		</div>
 	</div>
 </template>
@@ -21,8 +22,12 @@ const props = defineProps({
 	type: {
 		type: String,
 		default: 'text'
-	}
+	},
+	noError: Boolean
 });
+const emits = defineEmits(['input']);
+
+const emitInput = () => emits('input');
 </script>
 
 <style lang="scss" scoped>
@@ -48,6 +53,14 @@ const props = defineProps({
 	border: 1px solid var(--color-lavender-blue);
 	color: var(--color-very-dark-blue);
 	outline: none;
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	& {
+		-moz-appearance: none;
+	}
 
 	&:focus {
 		border-color: var(--color-secondary);

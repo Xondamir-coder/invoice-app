@@ -38,28 +38,36 @@
 			<div class="row">
 				<h1 class="items__title">Item List</h1>
 				<div class="items">
-					<ul class="item">
-						<li class="items__label">Item Name</li>
-						<li class="items__label">Qty.</li>
-						<li class="items__label">Price</li>
-						<li class="items__label">Total</li>
-					</ul>
 					<div class="item" v-for="item in itemsData">
-						<TextInput v-model="item.name" />
-						<TextInput v-model="item.quantity" />
-						<TextInput v-model="item.price" />
-						<p class="item__total">{{ item.total }}</p>
-						<svg
-							@click="removeItem(item)"
-							class="item__delete"
-							width="13"
-							height="16"
-							xmlns="http://www.w3.org/2000/svg">
-							<path
-								d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
-								fill="#888EB0"
-								fill-rule="nonzero" />
-						</svg>
+						<TextInput no-error label="Item Name" v-model="item.name" />
+						<TextInput
+							@input="watchItems"
+							type="number"
+							label="Qty."
+							no-error
+							v-model="item.quantity" />
+						<TextInput
+							no-error
+							@input="watchItems"
+							type="number"
+							label="Price"
+							v-model="item.price" />
+						<div class="item__total">
+							<p class="item__total-label">Total</p>
+							<p class="item__total-p">{{ item.total }}</p>
+						</div>
+						<button class="item__delete-button" type="button" @click="removeItem(item)">
+							<svg
+								class="item__delete"
+								width="13"
+								height="16"
+								xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
+									fill="#888EB0"
+									fill-rule="nonzero" />
+							</svg>
+						</button>
 					</div>
 				</div>
 				<button class="items__button button-lavender" type="button" @click="addItem">
@@ -96,7 +104,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import TextInput from './TextInput.vue';
-import { onMounted, ref, useAttrs, watch } from 'vue';
+import { onMounted, ref, useAttrs } from 'vue';
 import { useInvoiceStore } from '@/stores/invoice';
 import Overlay from './Overlay.vue';
 import { generateRandomID } from '@/js/helpers';
@@ -215,6 +223,7 @@ const initializeForm = () => {
 	}
 };
 const watchItems = () => {
+	console.log('watching items');
 	itemsData.value.forEach(item => {
 		item.total = Math.trunc(+item.quantity * +item.price);
 	});
@@ -228,8 +237,6 @@ onMounted(() => {
 	if (props.type == 'edit') {
 		initializeForm();
 	}
-
-	watch(itemsData.value, watchItems);
 });
 
 const dropdownOptions = ['Net 1 day', 'Net 7 days', 'Net 14 days', 'Net 30 days'];
@@ -271,21 +278,51 @@ ul {
 body.dark .item {
 	&__total {
 		color: var(--color-lavender-blue);
+		&-label {
+			color: var(--color-lavender-blue);
+		}
 	}
 }
 .item {
 	display: grid;
-	grid-auto-flow: column;
-	grid-auto-columns: 2fr 0.4fr 1fr 1fr;
-	align-items: stretch;
-	position: relative;
-	gap: 1.6rem;
-	&__delete {
-		position: absolute;
-		top: 50%;
-		right: 10px;
-		transform: translateY(-50%);
-		cursor: pointer;
+	align-items: baseline;
+	grid-template-columns: 3fr 1fr 1.5fr 1fr max-content;
+	grid-template-areas: 'name qty price total delete';
+	column-gap: 1.5rem;
+
+	div:first-child {
+		grid-area: name;
+	}
+	div:nth-child(2) {
+		grid-area: qty;
+	}
+	div:nth-child(3) {
+		grid-area: price;
+	}
+	div:nth-child(4) {
+		grid-area: total;
+	}
+	svg {
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		grid-area: delete;
+	}
+
+	@media only screen and (max-width: 768px) {
+		row-gap: 3rem;
+		grid-template-areas:
+			'name name name name'
+			'qty price total delete';
+		grid-template-columns: 1fr 2fr 2fr max-content;
+	}
+
+	&__delete-button {
+		background: transparent;
+		align-self: center;
+		padding: 0;
+		transform: translateY(0.8rem);
 		path {
 			transition: fill 300ms;
 		}
@@ -295,18 +332,32 @@ body.dark .item {
 	}
 	&__total {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		font-size: 1.5rem;
 		color: var(--color-cool-gray);
 		font-weight: bold;
 		letter-spacing: -0.25px;
-		transition: color 300ms;
+		gap: 10px;
+
+		&-label {
+			color: var(--color-blue-gray);
+			font-size: 1.5rem;
+			font-weight: 500;
+			letter-spacing: -0.1px;
+			transition: color 300ms;
+		}
+
+		&-p {
+			transition: color 300ms;
+			padding: 2rem 1.8rem;
+			padding-left: 0;
+		}
 	}
 }
 .items {
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+	gap: 3.5rem;
 	&__title {
 		color: #777f98;
 		font-size: 1.8rem;
@@ -328,6 +379,7 @@ body.dark .items {
 	display: flex;
 	flex-direction: column;
 	gap: 5rem;
+
 	&__error {
 		position: absolute;
 		left: 0;
@@ -350,6 +402,15 @@ body.dark .items {
 		display: flex;
 		justify-content: flex-end;
 		gap: 8px;
+		@media only screen and (max-width: 500px) {
+			width: 100%;
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			background-color: #fff;
+			padding: 2.4rem 2rem;
+			box-shadow: 2px 2px 46px 11px rgba(72, 84, 159, 0.6666666667);
+		}
 		button {
 			padding-left: 2rem;
 			padding-right: 2rem;
@@ -388,12 +449,32 @@ body.dark .items {
 	z-index: 2;
 	height: 100vh;
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 6rem;
 	padding-left: calc(6rem + 25px);
 	display: flex;
 	flex-direction: column;
 	gap: 4.6rem;
 	color: var(--color-very-dark-blue);
+	@media only screen and (max-width: 1300px) {
+		max-width: 70%;
+	}
+	@media only screen and (max-width: 768px) {
+		left: 0 !important;
+		max-width: 85%;
+		padding: 3rem;
+		padding-top: 15rem;
+	}
+	@media only screen and (max-width: 600px) {
+		max-width: 100%;
+		padding: 1.5rem;
+		padding-top: 15rem;
+	}
+
+	@media only screen and (max-width: 500px) {
+		padding-bottom: 15rem;
+	}
+
 	&__hashtag {
 		color: var(--color-cool-gray);
 	}

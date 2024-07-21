@@ -65,8 +65,10 @@ const toggleForm = () => (isAdding.value = !isAdding.value);
 		gap: 0;
 	}
 	&__filter {
+		width: 100%;
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
 		&-button {
 			padding: 1.1rem 1.5rem;
 		}

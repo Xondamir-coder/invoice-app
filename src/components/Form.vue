@@ -406,10 +406,11 @@ body.dark .items {
 			width: 100%;
 			position: fixed;
 			left: 0;
-			bottom: 0;
+			bottom: -3px;
 			background-color: #fff;
 			padding: 2.4rem 2rem;
 			box-shadow: 2px 2px 46px 11px rgba(72, 84, 159, 0.6666666667);
+			transition: background-color 300ms;
 		}
 		button {
 			padding-left: 2rem;
@@ -517,6 +518,11 @@ body.dark .container {
 	&::-webkit-scrollbar-thumb {
 		background-color: var(--color-dark-slate-blue);
 		border-radius: 10px;
+	}
+}
+body.dark .form {
+	&__buttons {
+		background-color: var(--color-tertiary);
 	}
 }
 </style>

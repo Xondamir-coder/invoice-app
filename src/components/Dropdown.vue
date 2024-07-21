@@ -73,8 +73,10 @@ const selectOption = option => {
 	font-weight: bold;
 	font-size: 1.5rem;
 	letter-spacing: -0.25px;
+	line-height: 1.4;
 }
 .dropdown {
+	width: 100%;
 	position: relative;
 	padding: 2rem 2.4rem;
 	border: 1px solid var(--color-lavender-blue);
@@ -86,6 +88,7 @@ const selectOption = option => {
 	align-items: center;
 	justify-content: space-between;
 	color: var(--color-very-dark-blue);
+	gap: 1rem;
 	&-container {
 		position: relative;
 		display: flex;
@@ -102,10 +105,6 @@ const selectOption = option => {
 	}
 	&-multiple {
 		border: none;
-		width: 17rem;
-		@media only screen and (max-width: 768px) {
-			width: 11rem;
-		}
 		.dropdown-options {
 			top: 100%;
 		}
@@ -200,6 +199,7 @@ const selectOption = option => {
 	}
 	&-value {
 		@include text;
+
 		&:empty + .dropdown-label {
 			top: 50%;
 			left: 2rem;
